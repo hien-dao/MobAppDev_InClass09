@@ -15,7 +15,6 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
 
   // Variable to store user input
   String _name = '';
@@ -24,7 +23,7 @@ class _SignupPageState extends State<SignupPage> {
 
   // Regex pattern for basic validation
   final RegExp _emailPattern = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-  final RegExp _passwordPattern = RegExp(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()-+=])(?=\S+$).{12,}$/gm'); // At least 12 chars, 1 upper, 1 lower, 1 number, 1 special char
+  final RegExp _passwordPattern = RegExp(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()\-\+=])(?=\S+$).{12,}$');
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +62,6 @@ class _SignupPageState extends State<SignupPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
                   }
-
-                  _name = value;
                   return null;
                 },
               ),
@@ -85,8 +82,6 @@ class _SignupPageState extends State<SignupPage> {
                   if (!_emailPattern.hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
-
-                  _email = value;
                   return null;
                 },
               ),
@@ -108,8 +103,6 @@ class _SignupPageState extends State<SignupPage> {
                   if (!_passwordPattern.hasMatch(value)) {
                     return 'Password must be at least 12 characters with uppercase, lowercase, number, and special character';
                   }
-
-                  _password = value;
                   return null;
                 },
               ),
@@ -117,7 +110,6 @@ class _SignupPageState extends State<SignupPage> {
 
               // 🔒 Confirm Password Field
               TextFormField(
-                controller: _confirmPasswordController,
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Confirm Password',
@@ -128,10 +120,9 @@ class _SignupPageState extends State<SignupPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please confirm your password';
                   }
-                  if (value != _password) {
+                  if (value != _passwordController.text) {
                     return 'Passwords do not match';
                   }
-
                   return null;
                 },
               ),
@@ -141,6 +132,10 @@ class _SignupPageState extends State<SignupPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    _name = _nameController.text;
+                    _email = _emailController.text;
+                    _password = _passwordController.text;
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Welcome! Account created successfully.'),
