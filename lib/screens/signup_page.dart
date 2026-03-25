@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'welcome_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -164,6 +165,14 @@ class _SignupPageState extends State<SignupPage> {
                       const SnackBar(
                         content: Text('Welcome! Account created successfully.'),
                         backgroundColor: Colors.green,
+                      ),
+                    );
+
+                    // Navigate to Welcome Page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WelcomePage(name: _name),
                       ),
                     );
                   }
