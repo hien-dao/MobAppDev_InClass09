@@ -25,6 +25,10 @@ class _SignupPageState extends State<SignupPage> {
   final RegExp _emailPattern = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
   final RegExp _passwordPattern = RegExp(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()\-\+=])(?=\S+$).{12,}$');
 
+  // State variables for password visibility
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold( // 👨 Parent
@@ -90,11 +94,21 @@ class _SignupPageState extends State<SignupPage> {
               // 🔒 Password Field
               TextFormField(
                 controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: !_isPasswordVisible,
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  prefixIcon: Icon(Icons.lock),
-                  border: OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    }, // This will be updated to toggle visibility
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -110,11 +124,21 @@ class _SignupPageState extends State<SignupPage> {
 
               // 🔒 Confirm Password Field
               TextFormField(
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: !_isConfirmPasswordVisible,
+                decoration: InputDecoration(
                   labelText: 'Confirm Password',
                   prefixIcon: Icon(Icons.lock_outline),
                   border: OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                      });
+                    }, // This will be updated to toggle visibility
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
