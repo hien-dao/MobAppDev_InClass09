@@ -31,6 +31,14 @@ class _SignupPageState extends State<SignupPage> {
   bool _isConfirmPasswordVisible = false;
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold( // 👨 Parent
       appBar: AppBar(
