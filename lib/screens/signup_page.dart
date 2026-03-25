@@ -15,15 +15,16 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   // Variable to store user input
   String _name = '';
   String _email = '';
   String _password = '';
-  String _confirmPassword = '';
 
-  // Email regex pattern for basic validation
+  // Regex pattern for basic validation
   final RegExp _emailPattern = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+  final RegExp _passwordPattern = RegExp(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()-+=])(?=\S+$).{12,}$/gm'); // At least 12 chars, 1 upper, 1 lower, 1 number, 1 special char
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,10 @@ class _SignupPageState extends State<SignupPage> {
       appBar: AppBar(
         title: const Text(
           'Join Us Today for the Cash Money!',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 40,
+            fontWeight: FontWeight.bold
+            ),
         ),
         backgroundColor: Colors.purple,
       ),
@@ -59,6 +63,8 @@ class _SignupPageState extends State<SignupPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
                   }
+
+                  _name = value;
                   return null;
                 },
               ),
@@ -76,9 +82,11 @@ class _SignupPageState extends State<SignupPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  if (!value.contains('@')) {
+                  if (!_emailPattern.hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
+
+                  _email = value;
                   return null;
                 },
               ),
@@ -97,9 +105,33 @@ class _SignupPageState extends State<SignupPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a password';
                   }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
+                  if (!_passwordPattern.hasMatch(value)) {
+                    return 'Password must be at least 12 characters with uppercase, lowercase, number, and special character';
                   }
+
+                  _password = value;
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // 🔒 Confirm Password Field
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Password',
+                  prefixIcon: Icon(Icons.lock_outline),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please confirm your password';
+                  }
+                  if (value != _password) {
+                    return 'Passwords do not match';
+                  }
+
                   return null;
                 },
               ),
@@ -123,7 +155,11 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 child: const Text(
                   'Sign Up',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                    ),
                 ),
               ),
             ],
